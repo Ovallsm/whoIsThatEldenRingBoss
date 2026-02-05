@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/eldenring-rune-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./src/style.css" />
+    <title>whoIsThatEldenRingBoss</title>
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+
+  </head>
+  <body>
+    <img src="/icon.png" alt="title" id="image_title" />
+    <div id="guessBossContainer">
+      <div id="bossIMG">
+        <img
+          src="./public/eldenring-rune-icon.png"
+          alt="placeholder"
+          id="placeholder"
+        />
+      </div>
+    </div>
+
+    <form autocomplete="off" action="/action_page.php">
+      <div class="autocomplete" style="width: 300px">
+        <input
+          id="bossGuess"
+          type="text"
+          name="myCountry"
+          placeholder="Boss Name"
+        />
+      </div>
+      <input type="submit" id="guess" value="Guess" />
+    </form>
+    <div id="btncontainer">
+      <a href="#" id="again">Try Again?</a>
+    </div>
+
+    <div id="guessLog"></div>
+
+    <audio src="/Fail_Sound.mp3" hidden id="failSound"></audio>
+    <audio src="/Correct_Sound.mp3" hidden id="correctsound"></audio>
+
+    <script src="./src/fetch.js"></script>
+    <script src="./src/index.js"></script>
+    <script src="./sw.js"> </script>
+  </body>
+</html>
