@@ -3,6 +3,8 @@ import { resolve } from 'path'
 
 export default defineConfig({
   root: '.',
+
+  publicDir: 'src',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
