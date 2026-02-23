@@ -1,10 +1,13 @@
+import { fetchBossData, bossNameList, selectedBossName } from "./fetch.js";
+
 let zoomLevel = 10;
 let gameEnded = false;
 
-const failSound = document.getElementById("failSound");
-const correctSound = document.getElementById("correctsound");
-
-const bossGuess = document.getElementById("bossGuess");
+let failSound;
+let correctSound;
+let bossGuess;
+let guessBtn;
+let logDIV;
 function autocomplete(inp, arr) {
   var currentFocus;
   inp.addEventListener("input", function (e) {
@@ -78,9 +81,60 @@ function autocomplete(inp, arr) {
 }
 
 addEventListener("DOMContentLoaded", async () => {
+  failSound = document.getElementById("failSound");
+  correctSound = document.getElementById("correctsound");
+  bossGuess = document.getElementById("bossGuess");
+  guessBtn = document.getElementById("guess");
+  logDIV = document.getElementById("guessLog");
+
   await fetchBossData();
-  autocomplete(document.getElementById("bossGuess"), bossNameList);
+  autocomplete(bossGuess, bossNameList);
   imageZoom(10);
+
+  guessBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (bossGuess.value == selectedBossName && !gameEnded) {
+      gameEnded = true;
+      createLog(true, bossGuess);
+      bossGuess.readOnly = true;
+      bossGuess.style.color = "green";
+      imageZoom(1);
+    }
+
+    if (!gameEnded) {
+      const guessedName = bossGuess.value.trim();
+      createLog(false, bossGuess);
+      zoomLevel -= 1;
+      const index = bossNameList.indexOf(guessedName);
+      if (index > -1) {
+        bossNameList.splice(index, 1);
+      }
+
+      bossGuess.value = "";
+      autocomplete(document.getElementById("bossGuess"), bossNameList);
+      if (zoomLevel < 1) {
+        gameEnded = true;
+        bossGuess.value = selectedBossName;
+        bossGuess.readOnly = true;
+        bossGuess.style.color = "red";
+        imageZoom(1);
+        return;
+      }
+
+      imageZoom(zoomLevel);
+    }
+  });
+
+  document.getElementById("again").addEventListener("click", () => {
+    window.location.reload();
+  });
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then(() => console.log("SW registered"))
+      .catch((err) => console.log("SW error", err));
+  }
 });
 
 function imageZoom(level) {
@@ -109,41 +163,6 @@ function imageZoom(level) {
 }
 
 
-guess.addEventListener("click", (e) => {
-  e.preventDefault();
-  if (bossGuess.value == selectedBossName && !gameEnded) {
-    gameEnded = true;
-    createLog(true, bossGuess);
-    bossGuess.readOnly = true;
-    bossGuess.style.color = "green";
-    imageZoom(1);
-  }
-
-  if (!gameEnded) {
-    const guessedName = bossGuess.value.trim();
-    createLog(false, bossGuess);
-    zoomLevel -= 1;
-    const index = bossNameList.indexOf(guessedName);
-    if (index > -1) {
-      bossNameList.splice(index, 1);
-    }
-
-    bossGuess.value = "";
-    autocomplete(document.getElementById("bossGuess"), bossNameList);
-    if (zoomLevel < 1) {
-      gameEnded = true;
-      bossGuess.value = selectedBossName;
-      bossGuess.readOnly = true;
-      bossGuess.style.color = "red";
-      imageZoom(1); 
-      return;
-    }
-
-    imageZoom(zoomLevel);
-  }
-});
-
-const logDIV = document.getElementById("guessLog");
 
 function createLog(isCorrect, bossName) {
   let div = document.createElement("div");
@@ -167,14 +186,4 @@ function createLog(isCorrect, bossName) {
   logDIV.appendChild(div);
 }
 
-document.getElementById("again").addEventListener("click", () =>
-{
-  window.location.reload()
-})
 
-
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/sw.js")
-    .then(() => console.log("SW registered"))
-    .catch(err => console.log("SW error", err));
-}

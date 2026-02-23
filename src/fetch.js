@@ -1,9 +1,9 @@
 const url = "https://eldenring.fanapis.com/api/bosses?limit=106";
-let selectedIMG = null;
-let selectedBossName = null;
-let bossNameList = [];
+export let selectedIMG = null;
+export let selectedBossName = null;
+export let bossNameList = [];
 
-async function fetchBossData() {
+export async function fetchBossData() {
   await fetch(url)
     .then((response) => response.json())
     .then((data) => {
@@ -29,10 +29,19 @@ function getRandomBossImage(data) {
   selectedIMG = data[randomIndex].image;
   selectedBossName = data[randomIndex].name;
   bossNameList = data.map((boss) => boss.name);
- 
-  document.getElementById("placeholder").hidden = true;
-  let img = document.createElement("img");
-  img.src = selectedIMG;
-  img.id = "bossImage";
-  document.getElementById("bossIMG").appendChild(img);
+  const placeholder = document.getElementById("placeholder");
+  if (placeholder) placeholder.hidden = true;
+
+  const existingImg = document.getElementById("bossImage");
+  const container = document.getElementById("bossIMG");
+  if (existingImg) {
+    existingImg.src = selectedIMG;
+    existingImg.alt = selectedBossName;
+  } else if (container) {
+    const img = document.createElement("img");
+    img.src = selectedIMG;
+    img.id = "bossImage";
+    img.alt = selectedBossName;
+    container.appendChild(img);
+  }
 }
