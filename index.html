@@ -9,15 +9,16 @@
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#000000" />
   </head>
-  <body>
-    <img src="/icon.webp" alt="title" id="image_title" loading="lazy" />
-
-    <div id="bossIMG">
+    <body>
+    <img src="/icon.webp" alt="title" id="image_title" />
+    <div id="guessBossContainer">
+      <div id="bossIMG">
           <img
             src="/eldenring-rune-icon.webp"
             alt="placeholder"
             id="bossImage"
           />
+        </div>
     </div>
 
     <form autocomplete="off" action="/action_page.php">
@@ -41,5 +42,6 @@
     <audio src="/Correct_Sound.mp3" hidden id="correctsound"></audio>
 
     <script type="module" src="/src/index.js"></script>
+    
   </body>
 </html>
